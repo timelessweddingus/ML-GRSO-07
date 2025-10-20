@@ -1,2 +1,2 @@
-# ML-GRSO-07
-Meaghan Lucas - Gender Reveal Scratch Off 07 - Custom Order
+# G-R-S-O-07
+Gender Reveal Scratch Off 07
