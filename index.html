@@ -144,57 +144,7 @@ $('#tryAgain').on('click', function () {
   $('#scratchArea').wScratchPad('reset');
 });
 
-$('#downloadBtn').on('click', async function () {
-  try {
-    // 1. Start screen capture
-    const stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
-    const track = stream.getVideoTracks()[0];
-    const imageCapture = new ImageCapture(track);
-    const bitmap = await imageCapture.grabFrame();
-
-    // 2. Draw full screen image
-    const fullCanvas = document.createElement('canvas');
-    fullCanvas.width = bitmap.width;
-    fullCanvas.height = bitmap.height;
-    const ctx = fullCanvas.getContext('2d');
-    ctx.drawImage(bitmap, 0, 0);
-
-    // 3. Get scratchpad position & size on screen
-    const scratchpad = document.querySelector('.scratchpad');
-    const rect = scratchpad.getBoundingClientRect();
-    const scaleX = bitmap.width / window.innerWidth;
-    const scaleY = bitmap.height / window.innerHeight;
-
-    // 4. Crop only that area
-    const cropCanvas = document.createElement('canvas');
-    cropCanvas.width = rect.width * scaleX;
-    cropCanvas.height = rect.height * scaleY;
-    const cropCtx = cropCanvas.getContext('2d');
-    cropCtx.drawImage(
-      fullCanvas,
-      rect.left * scaleX,
-      rect.top * scaleY,
-      rect.width * scaleX,
-      rect.height * scaleY,
-      0,
-      0,
-      rect.width * scaleX,
-      rect.height * scaleY
-    );
-
-    // 5. Download the cropped screenshot
-    const link = document.createElement('a');
-    link.download = 'scratchpad-screenshot.png';
-    link.href = cropCanvas.toDataURL('image/png');
-    link.click();
-
-    // Stop stream
-    track.stop();
-  } catch (err) {
-    console.error('Capture failed:', err);
-    alert('Please allow screen capture to take screenshot.');
-  }
-});
+$('#downloadBtn').on('click', function () { html2canvas(document.querySelector(".scratchpad"), { scale: 3 }).then(canvas => { const link = document.createElement('a'); link.download = 'scratch-image.png'; link.href = canvas.toDataURL('image/png'); link.click(); }); });
 </script>
 
 </body>
